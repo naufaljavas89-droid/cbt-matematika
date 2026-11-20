@@ -1,0 +1,27 @@
+<!doctype html><html lang="id"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CBT Matematika Kelas 9</title>
+<style>
+body{font:16px Arial;background:#f2f5fa;color:#172033;margin:0}.head{background:#173b70;color:white;padding:18px}main{max-width:850px;margin:18px auto;padding:0 12px}.card{background:white;border:1px solid #dce3ee;border-radius:14px;padding:18px}.muted{color:#667085;font-size:13px}.row{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center}button{border:0;border-radius:8px;padding:11px 15px;background:#1768b2;color:white;font-weight:bold}button:disabled{opacity:.4}.opt{display:block;border:1px solid #d8e0ec;border-radius:9px;padding:12px;margin:9px 0}table{border-collapse:collapse;margin:12px 0}td,th{border:1px solid #aab7c8;padding:9px;text-align:center}th{background:#edf3fa}.nav{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin:12px 0}.nav button{background:#edf1f7;color:#173b70;padding:9px}.nav .cur{background:#173b70;color:white}.nav .done{background:#dff4e9}.progress{height:7px;background:#e8edf5;margin:14px 0}.bar{height:7px;background:#2775c7}.timer{color:#a33;font-weight:bold}
+</style>
+<header class="head"><b>UJIAN CBT — MATEMATIKA</b><div class="muted" style="color:white">Latihan mandiri SMP/MTs kelas 9</div></header><main>
+<section class="card" id="intro"><h2>Petunjuk pengerjaan</h2><ul><li>Waktu 30 menit.</li><li>Pilih satu jawaban A–D.</li><li>Gunakan nomor soal untuk berpindah.</li><li>Nilai dan pembahasan muncul setelah selesai.</li></ul><p class="muted">Website latihan mandiri; jawaban tidak dikirim ke server sekolah.</p><button onclick="start()">Mulai ujian</button></section>
+<section class="card" id="exam" hidden><div class="row"><b>Matematika Kelas 9</b><span class="timer" id="timer">30:00</span></div><div class="progress"><div class="bar" id="bar"></div></div><div class="muted" id="counter"></div><h3 id="q"></h3><div id="opts"></div><div class="row"><button id="prev" onclick="move(-1)">Sebelumnya</button><button id="next" onclick="move(1)">Selanjutnya</button></div><hr><b>Daftar soal</b><div class="nav" id="nav"></div><div class="row"><span class="muted" id="count"></span><button onclick="finish()">Selesaikan ujian</button></div></section>
+<section class="card" id="result" hidden><h2>Hasil ujian</h2><h1 id="score"></h1><div id="review"></div><button onclick="location.reload()">Ulangi ujian</button></section></main>
+<script>
+const data=[
+["Hasil dari ¾ + ⅖ adalah ....",["5/9","23/20","17/20","6/20"],1,"Samakan penyebut: 15/20 + 8/20 = 23/20."],
+["Balok panjang 12 cm, lebar 8 cm, tinggi 5 cm. Volumenya adalah ....",["240 cm³","360 cm³","480 cm³","520 cm³"],2,"V = 12 × 8 × 5 = 480 cm³."],
+["Perhatikan tabel nilai berikut. Berapa rata-ratanya?<table><tr><th>Nilai</th><th>Frekuensi</th></tr><tr><td>60</td><td>2</td></tr><tr><td>70</td><td>3</td></tr><tr><td>80</td><td>4</td></tr><tr><td>90</td><td>1</td></tr></table>",["72","74","75","80"],1,"(60×2 + 70×3 + 80×4 + 90×1) ÷ 10 = 74."],
+["Jika 3x + 5 = 20, nilai x adalah ....",["3","4","5","6"],2,"3x = 15, maka x = 5."],
+["Lingkaran berjari-jari 7 cm. Luasnya (π = 22/7) adalah ....",["144 cm²","154 cm²","164 cm²","174 cm²"],1,"L = 22/7 × 7 × 7 = 154 cm²."],
+["Dari 200 siswa, 25% menyukai badminton. Banyak siswa tersebut adalah ....",["25","40","50","80"],2,"25% × 200 = 50."],
+["Suku berikutnya dari 3, 7, 11, 15, ... adalah ....",["17","18","19","20"],2,"Pola bertambah 4, jadi 19."],
+["Dua sudut segitiga 55° dan 65°. Sudut ketiganya adalah ....",["50°","60°","70°","80°"],1,"180° − 55° − 65° = 60°."],
+["Hasil 2³ × 2² adalah ....",["16","24","32","64"],2,"2 pangkat 3+2 = 2⁵ = 32."],
+["Harga barang Rp80.000 didiskon 15%. Harga akhirnya ....",["Rp60.000","Rp66.000","Rp68.000","Rp72.000"],2,"Diskon Rp12.000, harga akhir Rp68.000."]
+];let n=0,ans={},left=1800,tick;
+function start(){intro.hidden=true;exam.hidden=false;draw();tick=setInterval(()=>{left--;timer.textContent=String(Math.floor(left/60)).padStart(2,'0')+':'+String(left%60).padStart(2,'0');if(left<=0)finish(true)},1000)}
+function draw(){counter.textContent='Soal '+(n+1)+' dari '+data.length;q.innerHTML=data[n][0];opts.innerHTML=data[n][1].map((x,i)=>'<label class="opt"><input type="radio" name="a" '+(ans[n]===i?'checked':'')+' onchange="ans[n]='+i+';navDraw()"> '+String.fromCharCode(65+i)+'. '+x+'</label>').join('');prev.disabled=n===0;next.disabled=n===data.length-1;bar.style.width=((n+1)/data.length*100)+'%';navDraw()}
+function navDraw(){nav.innerHTML=data.map((x,i)=>'<button class="'+(i===n?'cur ':'')+(ans[i]!==undefined?'done':'')+'" onclick="n='+i+';draw()">'+(i+1)+'</button>').join('');count.textContent=Object.keys(ans).length+' dari 10 soal dijawab.'}
+function move(d){n=Math.max(0,Math.min(data.length-1,n+d));draw()}
+function finish(auto){if(exam.hidden)return;if(!auto&&!confirm('Selesaikan ujian sekarang?'))return;clearInterval(tick);exam.hidden=true;result.hidden=false;let c=data.filter((x,i)=>ans[i]===x[2]).length;score.textContent=(c*10)+'/100';review.innerHTML=data.map((x,i)=>'<p><b>Nomor '+(i+1)+': '+(ans[i]===x[2]?'Benar':'Belum tepat')+'</b><br><span class="muted">Kunci: '+String.fromCharCode(65+x[2])+'. '+x[1][x[2]]+' — '+x[3]+'</span></p>').join('')}
+</script></html>
